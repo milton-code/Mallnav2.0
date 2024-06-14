@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Mallnav</string>
+    <string name="registrar_usuario">Registrar usuario</string>
+    <string name="iniciar_sesion">Iniciar sesión</string>
+    <string name="ingrese_su_e_mail">Ingrese su e-mail</string>
+    <string name="ingrese_su_password">Ingrese su password</string>
+    <string name="registrar">Registrar</string>
+    <string name="ingrese_un_password">Ingrese un password</string>
+    <string name="apellido">Ingrese su apellido</string>
+    <string name="nombre">Ingrese su nombre</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_item_locations">Locations</string>
+    <string name="menu_item_navigation">Navigation</string>
+    <string name="menu_item_profile">Profile</string>
+    <string name="navigation_service_name"><![CDATA[&appname; Service]]></string>
 </resources>
