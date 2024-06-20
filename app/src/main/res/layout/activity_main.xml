@@ -14,10 +14,15 @@
         app:layout_constraintBottom_toTopOf="@id/main__bottom_navigation"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/main_navgraph"/>
 
-    <com.proyecto.mallnav.ui.custom.navigation.SavedBottomNavigationView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/main__bottom_navigation"
+        app:menu="@menu/menu_mallnav"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         style="@style/Theme.Mallnav.BottomNavigation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    search view-->
+    <dimen name="search_container_height">100dp</dimen>
+    <dimen name="search_height">37dp</dimen>
+    <dimen name="search_padding_start_icon">-12dp</dimen>
+    <dimen name="search_stroke_width">2dp</dimen>
+    <!--    shared-->
+    <dimen name="list_item_height">55dp</dimen>
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="btn_icon_inset">0dp</dimen>
+    <dimen name="margin_side_bar_top">16dp</dimen>
+    <dimen name="margin_top_bar_top">36dp</dimen>
+    <dimen name="margin_top_location">100dp</dimen>
+    <dimen name="progress_circular_size">62dp</dimen>
+    <dimen name="control_panel_item_size">48dp</dimen>
+    <dimen name="margin_bottom">16dp</dimen>
+    <dimen name="bottom_sheet_elevation">8dp</dimen>
+    <!--    warning-->
+    <dimen name="warning_padding">10dp</dimen>
+    <dimen name="warning_text">15sp</dimen>
+</resources>

@@ -1,5 +1,7 @@
 package com.proyecto.mallnav.ui.activities;
 
+import static com.proyecto.mallnav.utils.Constants.ENDPOINT_GET_USER;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,23 +20,32 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 
+import com.navigine.idl.java.Location;
+import com.navigine.idl.java.LocationListener;
 import com.proyecto.mallnav.R;
 import com.proyecto.mallnav.ui.fragments.RegistroFragment;
+import com.proyecto.mallnav.utils.NavigineSdkManager;
+import com.navigine.sdk.Navigine;
 
 
 public class LoginActivity extends AppCompatActivity {
     EditText mCorreo, mPassword;
     Button mLogin;
     private FirebaseAuth mAuth;
+    boolean inicio;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Navigine.initialize(getApplicationContext());
         mCorreo = findViewById(R.id.editTextEmail);
         mPassword = findViewById(R.id.editTextPassword);
         mLogin = findViewById(R.id.buttonLogin);
         mAuth = FirebaseAuth.getInstance();
+        inicio = sdkInit();
 
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,12 +65,10 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(correo, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    startActivity(new Intent (LoginActivity.this, MainActivity.class));
+                if (task.isSuccessful()&&inicio){
+                    openMainScreen();
                     Toast.makeText(LoginActivity.this,"Bienvenido",Toast.LENGTH_SHORT).show();
-                }/*else{
-                    Toast.makeText(LoginActivity.this,"Credenciales incorrectas",Toast.LENGTH_SHORT).show();
-                }*/
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -67,6 +76,15 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this,"Credenciales incorrectas",Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private boolean sdkInit() {
+        return NavigineSdkManager.initializeSdk();
+    }
+
+    private void openMainScreen() {
+        startActivity(new Intent(this, MainActivity.class));
+        finishAffinity();
     }
 
     public void registrar(View v){

@@ -20,6 +20,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        buildConfigField ("String", "DEFAULT_SERVER_URL", "\"https://ips.navigine.com\"")
+        buildConfigField ("String", "DEFAULT_USER_HASH", "\"2131-2229-C767-3B9D\"")
     }
 
     buildTypes {
@@ -47,10 +49,16 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     //navigation
     implementation ("androidx.navigation:navigation-fragment:2.7.7")
+    implementation ("androidx.navigation:navigation-ui:2.7.7")
+    //Lottie
+    implementation ("com.airbnb.android:lottie:5.0.3")
+    //Volley
+    implementation ("com.android.volley:volley:1.2.1")
 
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.work.runtime)
+    implementation(libs.swiperefreshlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

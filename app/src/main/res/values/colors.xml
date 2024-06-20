@@ -15,4 +15,9 @@
     <color name="colorOnBackground">#FFFFFF</color>
     <color name="colorOnBackground_80">#CCFFFFFF</color>
     <color name="colorOnBackground_50">#80FFFFFF</color>
+    <!--    Condition-->
+    <color name="colorSuccess">#4CD964</color>
+    <color name="colorSuccessBackground">#404CD964</color>
+    <color name="colorError">#FF5758</color>
+    <color name="colorErrorBackground">#CCFF5758</color>
 </resources>

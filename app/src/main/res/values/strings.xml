@@ -14,4 +14,13 @@
     <string name="menu_item_navigation">Navigation</string>
     <string name="menu_item_profile">Profile</string>
     <string name="navigation_service_name"><![CDATA[&appname; Service]]></string>
+    <string name="state_on">on</string>
+    <string name="state_off">off</string>
+    <string name="permission_rationale_message_bg_access">In order to ensure correct and effective navigation and positioning services, the application has to collect location data.\nFor push notifications, the application has to work in background mode</string>
+    <string name="dialog_action_ok">ok</string>
+    <string name="search_title">Search</string>
+    <string name="err_locations_update">Failed to download locations list</string>
+    <string name="err_sdk_not_init">SDK no inicializado</string>
+    <string name="navigation">Navigation</string>
+    <string name="perfil">Perfil</string>
 </resources>
