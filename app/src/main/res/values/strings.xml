@@ -19,8 +19,35 @@
     <string name="permission_rationale_message_bg_access">In order to ensure correct and effective navigation and positioning services, the application has to collect location data.\nFor push notifications, the application has to work in background mode</string>
     <string name="dialog_action_ok">ok</string>
     <string name="search_title">Search</string>
-    <string name="err_locations_update">Failed to download locations list</string>
     <string name="err_sdk_not_init">SDK no inicializado</string>
     <string name="navigation">Navigation</string>
     <string name="perfil">Perfil</string>
+    <string name="permission_rationale_message_bluetooth">To use all the features of the application grant bluetooth permission</string>
+    <string name="dialog_action_understand">understand</string>
+    <!--    errors-->
+    <string name="err_profile_update_auth">Failed update user info. Authentication error</string>
+    <string name="err_locations_update">Failed to download locations list</string>
+    <string name="err_network">Cannot connect to host…Please check your connection!</string>
+    <string name="err_network_server">The server could not be found. Please try again after some time</string>
+    <string name="err_network_auth">Authentication error</string>
+    <string name="err_network_parse">Parsing error. Please try again after some time</string>
+    <string name="err_network_no_connection">No network connection</string>
+    <string name="err_network_timeout">Connection TimeOut. Please check your internet connection</string>
+    <string name="err_network_server_incorrect">The server is incorrect</string>
+    <string name="err_network_response_parse">Error while parse response</string>
+    <string name="err_deep_link">Intent keys are null</string>
+    <string name="err_deep_link_send">Failed to send pending intent with deep link</string>
+    <string name="err_deep_link_parse">Error while parsing deep link params</string>
+    <string name="err_permission_camera">Camera permission required</string>
+    <string name="err_permission_bluetooth">To determine your location, please, grant bluetooth permission</string>
+    <string name="err_permission_location">To determine your location, please, grant location permission</string>
+    <string name="err_permission_location_background">To determine your location in background, please, grant location permission by selecting first option in permissions settings</string>
+    <string name="err_permission_location_background_api_30">To determine your location in background, please, grant location permission by selecting \'%1$s\' in settings</string>
+    <string name="err_navigation_state_bluetooth">Your Bluetooth is not enabled, please turn it on to get the Navigation results!</string>
+    <string name="err_navigation_state_gps">Your GPS is not enabled, please turn it on to get the Navigation results!</string>
+    <string name="err_navigation_state_gps_bluetooth">Your GPS and Bluetooth are not enabled, please turn it on to get the Navigation results!</string>
+    <string name="err_navigation_position_update">Position update error</string>
+    <string name="err_navigation_position_define">Position isn\'t defined</string>
+    <string name="err_navigation_no_route">No route path</string>
+    <string name="err_debug_os_version">Error while getting OS version</string>
 </resources>

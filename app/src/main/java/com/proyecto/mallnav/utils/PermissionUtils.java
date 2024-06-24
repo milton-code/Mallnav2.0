@@ -17,8 +17,13 @@ import com.proyecto.mallnav.R;
 public class PermissionUtils {
 
     private static final int RC_PERMISSION_BACKGROUND_LOCATION = 101;
-    private static AlertDialog mAlertLocationDialog = null;
+    private static AlertDialog mAlertBluetoothDialog, mAlertLocationDialog = null;
 
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public static boolean hasBluetoothPermission(Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN)
+                == PackageManager.PERMISSION_GRANTED;
+    }
 
     public static boolean hasLocationPermission(Context context) {
         return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -47,5 +52,16 @@ public class PermissionUtils {
         mAlertLocationDialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public static void showBluetoothPermissionRationale(Activity context) {
+        if (mAlertBluetoothDialog == null) {
+            mAlertBluetoothDialog = new MaterialAlertDialogBuilder(context, R.style.Theme_Mallnav_MaterialAlertDialog_Rounded)
+                    .setMessage(R.string.permission_rationale_message_bluetooth)
+                    .setPositiveButton(R.string.dialog_action_understand, (dialog, which) -> {
+                    })
+                    .create();
+        }
+        mAlertBluetoothDialog.show();
+    }
 
 }
