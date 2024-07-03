@@ -1,13 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation__layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.fragments.NavigationFragment">
 
-    <com.navigine.view.LocationView
-        android:id="@+id/location_view"
+    <!-- Main layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/navigation__navigation_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="@string/navigation_layout_description">
 
-</FrameLayout>
+        <com.navigine.view.LocationView
+            android:id="@+id/location_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
+
+        <FrameLayout
+            android:id="@+id/navigation__search_transparent_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="@dimen/control_btn_elevation"
+            android:gravity="top">
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/navigation__adjust_mode_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/control_btn_margin_side"
+            android:layout_marginBottom="@dimen/navigation_margin_adjust_btn"
+            android:background="@drawable/bg_adjust_btn"
+            android:clickable="true"
+            android:elevation="@dimen/control_btn_elevation"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/navigation_adjust_description">
+        </FrameLayout>
+
+        <!-- Warning (GPS, Bluetooth) message -->
+        <include
+            android:id="@+id/navigation__warning"
+            layout="@layout/warning"
+            android:visibility="gone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

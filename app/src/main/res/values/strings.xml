@@ -43,11 +43,14 @@
     <string name="err_permission_location">To determine your location, please, grant location permission</string>
     <string name="err_permission_location_background">To determine your location in background, please, grant location permission by selecting first option in permissions settings</string>
     <string name="err_permission_location_background_api_30">To determine your location in background, please, grant location permission by selecting \'%1$s\' in settings</string>
-    <string name="err_navigation_state_bluetooth">Your Bluetooth is not enabled, please turn it on to get the Navigation results!</string>
-    <string name="err_navigation_state_gps">Your GPS is not enabled, please turn it on to get the Navigation results!</string>
-    <string name="err_navigation_state_gps_bluetooth">Your GPS and Bluetooth are not enabled, please turn it on to get the Navigation results!</string>
+    <string name="err_navigation_state_bluetooth">¡Su Bluetooth está deshabilitado! Por favor enciéndalo para empezar la navegación</string>
+    <string name="err_navigation_state_gps">¡Su GPS está deshabilitado! Por favor enciéndalo para empezar la navegación</string>
+    <string name="err_navigation_state_gps_bluetooth">¡Su GPS y Bluetooth están deshabilitados! Por favor enciéndalos para empezar la navegación</string>
     <string name="err_navigation_position_update">Position update error</string>
     <string name="err_navigation_position_define">Position isn\'t defined</string>
     <string name="err_navigation_no_route">No route path</string>
     <string name="err_debug_os_version">Error while getting OS version</string>
+    <string name="venue_banking">Banco</string>
+    <string name="navigation_layout_description">Vista de navegación</string>
+    <string name="navigation_adjust_description">nina</string>
 </resources>

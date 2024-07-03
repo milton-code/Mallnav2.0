@@ -47,18 +47,28 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:23.0.0")
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-analytics")
+    //ui
+    implementation ("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
+    implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation(libs.material)
+    implementation(libs.swiperefreshlayout)
+    //fragment
+    implementation ("androidx.fragment:fragment:1.8.1")
     //navigation
     implementation ("androidx.navigation:navigation-fragment:2.7.7")
     implementation ("androidx.navigation:navigation-ui:2.7.7")
+    //lifecycle
+    implementation ("androidx.lifecycle:lifecycle-livedata:2.8.2")
+    implementation ("androidx.lifecycle:lifecycle-process:2.8.2")
     //Lottie
     implementation ("com.airbnb.android:lottie:5.0.3")
     //Volley
     implementation ("com.android.volley:volley:1.2.1")
-
+    //support
     implementation(libs.appcompat)
-    implementation(libs.material)
+    //worker
     implementation(libs.work.runtime)
-    implementation(libs.swiperefreshlayout)
+    //test
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
