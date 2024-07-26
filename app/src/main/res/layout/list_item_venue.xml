@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/li_venue_name"
-        style="@style/AppTheme.List.Item.TextView.Venue.Name"
+        style="@style/Theme.Mallnav.List.Item.TextView.Venue.Name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight=".7"
@@ -20,7 +20,7 @@
 
     <TextView
         android:id="@+id/li_venue_sublocation"
-        style="@style/AppTheme.List.Item.TextView.Venue.Sublocation"
+        style="@style/Theme.Mallnav.List.Item.TextView.Venue.Sublocation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight=".3"

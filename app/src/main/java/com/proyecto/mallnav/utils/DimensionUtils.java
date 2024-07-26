@@ -4,13 +4,13 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
 import com.proyecto.mallnav.R;
-//import com.navigine.navigine.demo.application.NavigineApp;
+import com.proyecto.mallnav.application.NavigineApp;
 
 public class DimensionUtils {
 
-    //public static int STROKE_WIDTH = (int) NavigineApp.AppContext.getResources().getDimension(R.dimen.search_stroke_width);
+    public static int STROKE_WIDTH = (int) NavigineApp.AppContext.getResources().getDimension(R.dimen.search_stroke_width);
 
-    // Display settings
+    //Display settings
     private static DisplayMetrics DisplayMetrics  = null;
 
     public static float DisplayWidthPx  = 0.0f;

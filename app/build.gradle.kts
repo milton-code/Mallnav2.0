@@ -60,6 +60,9 @@ dependencies {
     //lifecycle
     implementation ("androidx.lifecycle:lifecycle-livedata:2.8.2")
     implementation ("androidx.lifecycle:lifecycle-process:2.8.2")
+    //glide
+    implementation ("com.github.bumptech.glide:glide:4.13.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.13.0")
     //Lottie
     implementation ("com.airbnb.android:lottie:5.0.3")
     //Volley

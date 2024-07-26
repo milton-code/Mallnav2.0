@@ -24,10 +24,8 @@ public abstract class BaseFragment extends Fragment {
     private LocationManager locationManager  = null;
     private BluetoothManager bluetoothManager = null;
     private BluetoothAdapter bluetoothAdapter = null;
-
     private StateReceiver receiver = null;
     private IntentFilter  filter   = null;
-
     protected String bluetoothState   = null;
     protected String geoLocationState = null;
 
@@ -79,7 +77,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     private void updateGeolocationState() {
-        geoLocationState = isGpsEnabled() ? getString(R.string.state_on) : getString(R.string.state_off);
+        geoLocationState = isGpsEnabled() ? getString(R.string.state_on) :  getString(R.string.state_off);
     }
 
     private void updateBluetoothState() {
@@ -96,7 +94,7 @@ public abstract class BaseFragment extends Fragment {
         receiver = new StateReceiver();
         filter   = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        filter.addAction(LOCATION_CHANGED);
+        //filter.addAction(LOCATION_CHANGED);
     }
 
     private void registerReceiver() {
@@ -121,19 +119,6 @@ public abstract class BaseFragment extends Fragment {
         return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
     }
 
-    protected boolean hasLocationPermission() {
-        return PermissionUtils.hasLocationPermission(requireActivity());
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.S)
-    protected boolean hasBluetoothPermission() {
-        return PermissionUtils.hasBluetoothPermission(requireActivity());
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    protected boolean hasBackgroundLocationPermission() {
-        return PermissionUtils.hasLocationBackgroundPermission(requireActivity());
-    }
 
     /*protected void openLocationsScreen() {
         mNavigationView.setSelectedItemId(R.id.navigation_locations);

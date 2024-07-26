@@ -62,7 +62,7 @@
     <!--    dialogs-->
     <dimen name="dialog_rounded_corners">10dp</dimen>
     <dimen name="dialog_rounded_text">20sp</dimen>
-    <dimen name="dialog_btn_close">28dp</dimen>
+    <dimen name="dialog_btn_close">48dp</dimen>
     <!--    warning-->
     <dimen name="warning_padding">10dp</dimen>
     <dimen name="warning_text">15sp</dimen>

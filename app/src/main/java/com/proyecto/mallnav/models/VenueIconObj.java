@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class VenueIconObj implements Parcelable {
 
-    private int imageDrawable = -1;
+    private int    imageDrawable = -1;
     private String categoryName  = null;
     private boolean isActivated  = false;
 
