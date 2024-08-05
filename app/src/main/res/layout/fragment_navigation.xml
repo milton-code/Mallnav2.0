@@ -16,7 +16,8 @@
                 <com.navigine.view.LocationView
                     android:id="@+id/location_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"/>
 
                 <!-- Adjust button -->
                 <FrameLayout
@@ -30,7 +31,8 @@
                     android:elevation="@dimen/control_btn_elevation"
                     android:focusable="true"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:contentDescription="boton de navegacion">
                 </FrameLayout>
 
                 <FrameLayout

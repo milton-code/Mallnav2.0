@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @Override
+    /*@Override
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             mAuth.signOut();
             startActivity(new Intent(this, LoginActivity.class));
         }
-    }
+    }*/
 
     public void iniciarSesion(String correo, String password){
         mAuth.signInWithEmailAndPassword(correo, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {

@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import static com.proyecto.mallnav.utils.Constants.KEY_VENUE_CATEGORY;
+import static com.proyecto.mallnav.utils.Constants.KEY_VENUE_NAME;
 import static com.proyecto.mallnav.utils.Constants.KEY_VENUE_POINT;
 import static com.proyecto.mallnav.utils.Constants.KEY_VENUE_SUBLOCATION;
 import static com.proyecto.mallnav.utils.Constants.VENUE_FILTER_OFF;
@@ -80,7 +81,7 @@ public class NavigationFragment extends BaseFragment {
 
     private int mVenueId = -1;
     private float mZoomCameraDefault = 0f;
-    private static final String KEY_VENUE = "name";
+
     private NavigationViewModel viewModel = null;
     private Window window = null;
     private MaterialButton mSearchBtnClose = null;
@@ -305,7 +306,7 @@ public class NavigationFragment extends BaseFragment {
 
         mSearchBtnClose.setOnClickListener(v -> onHandleCancelSearch());
 
-        mAdjustModeButton.setOnClickListener(v -> toggleAdjustMode());
+        //mAdjustModeButton.setOnClickListener(v -> toggleAdjustMode());
 
         mLocationView.getLocationWindow().addPickListener(new PickListener() {
             @Override
@@ -314,10 +315,10 @@ public class NavigationFragment extends BaseFragment {
 
             @Override
             public void onMapFeaturePickComplete(HashMap<String, String> hashMap, PointF pointF) {
-                if (hashMap != null && hashMap.containsKey(KEY_VENUE)) {
+                if (hashMap != null && hashMap.containsKey(KEY_VENUE_NAME)) {
                     for (int i = 0; i < mSublocation.getVenues().size(); i++) {
                         Venue v = mSublocation.getVenues().get(i);
-                        if (v.getName().equals(hashMap.get(KEY_VENUE))) {
+                        if (v.getName().equals(hashMap.get(KEY_VENUE_NAME))) {
                             mPinVenue = v;
                             showVenueBottomSheet();
                             break;
@@ -345,14 +346,14 @@ public class NavigationFragment extends BaseFragment {
 
         });
 
-        mLocationView.getLocationWindow().addCameraListener(new CameraListener() {
+        /*mLocationView.getLocationWindow().addCameraListener(new CameraListener() {
             @Override
             public void onCameraPositionChanged(CameraUpdateReason cameraUpdateReason, boolean b) {
                 if (!b && mAdjustMode) {
                     toggleAdjustMode();
                 }
             }
-        });
+        });*/
 
     }
 
@@ -388,7 +389,7 @@ public class NavigationFragment extends BaseFragment {
         //hideAndShowBottomSheets(mMakeRouteBehavior, null, BottomSheetBehavior.STATE_COLLAPSED);
     }
 
-    public void toggleAdjustMode() {
+    /*public void toggleAdjustMode() {
         if (mPositionLocationPoint == null)
             //showWarningTemp(getString(R.string.err_navigation_position_define), 1500);
             Toast.makeText(getContext(),"Elver",Toast.LENGTH_SHORT).show();
@@ -396,7 +397,7 @@ public class NavigationFragment extends BaseFragment {
             mAdjustMode = !mAdjustMode;
             mAdjustModeButton.setSelected(mAdjustMode);
         }
-    }
+    }*/
 
     private void initLocationViewObjects() {
         mPolylineMapObject = mLocationView.getLocationWindow().addPolylineMapObject();
@@ -413,12 +414,12 @@ public class NavigationFragment extends BaseFragment {
 
     private void initAdapters(){
         mVenueListAdapter = new VenueListAdapter();
-        mVenuesIconsListAdapter = new VenuesIconsListAdapter();
+        //mVenuesIconsListAdapter = new VenuesIconsListAdapter();
     }
 
     private void setAdapters(){
         mVenueListView.setAdapter(mVenueListAdapter);
-        mVenueIconsListView.setAdapter(mVenuesIconsListAdapter);
+        //mVenueIconsListView.setAdapter(mVenuesIconsListAdapter);
     }
 
     private void setObservers(){
@@ -435,7 +436,7 @@ public class NavigationFragment extends BaseFragment {
                 }
 
                 mVenueListAdapter.submit(mVenuesList, mLocation);
-                updateFilteredVenuesIconsList();
+                //updateFilteredVenuesIconsList();
 
                 if (isVisible()) loadMap();
             }
@@ -443,7 +444,7 @@ public class NavigationFragment extends BaseFragment {
         });
     }
 
-    private void updateFilteredVenuesIconsList() {
+    /*private void updateFilteredVenuesIconsList() {
         mFilteredVenueIconsList.clear();
 
         Map<Integer, String> mCategoriesIdsAll = new HashMap();
@@ -462,7 +463,7 @@ public class NavigationFragment extends BaseFragment {
                 mFilteredVenueIconsList.add(new VenueIconObj(venueIconObj.getImageDrawable(), venueIconObj.getCategoryName()));
             }
         }
-    }
+    }*/
 
     private void resetLocationFlags() {
         //mLocationChanged = false;
@@ -546,10 +547,6 @@ public class NavigationFragment extends BaseFragment {
         updatePinIconsState(false, mPinIconFrom, mPinIconTarget);
     }
 
-    private void adjustDevice(Point point) {
-        Camera camera = new Camera(point, mZoomCameraDefault * 2, 0);
-        mLocationView.getLocationWindow().flyTo(camera, 1000, null);
-    }
 
     private boolean hasTarget() {
         return mTargetPoint != null || mTargetVenue != null;
@@ -592,12 +589,12 @@ public class NavigationFragment extends BaseFragment {
             //hideSearchButton();
             showSearchCLoseBtn();
             hideVenueListLayout();
-            showVenueIconsLayout();
-            populateVenueIconsLayout();
+            //showVenueIconsLayout();
+            //populateVenueIconsLayout();
         } else {
             hideSearchCLoseBtn();
             //showSearchButton();
-            hideVenueIconsLayout();
+            //hideVenueIconsLayout();
             showVenueListLayout();
         }
         filterVenueListByQuery(query);
@@ -621,10 +618,10 @@ public class NavigationFragment extends BaseFragment {
             showSearchCLoseBtn();
             if (isQueryEmpty) {
                 hideVenueListLayout();
-                showVenueIconsLayout();
-                populateVenueIconsLayout();
+                //showVenueIconsLayout();
+                //populateVenueIconsLayout();
             } else {
-                hideVenueIconsLayout();
+                //hideVenueIconsLayout();
                 showVenueListLayout();
             }
         } else {
@@ -637,13 +634,13 @@ public class NavigationFragment extends BaseFragment {
         ((GradientDrawable) mSearchField.getBackground()).setStroke(DimensionUtils.STROKE_WIDTH, color);
     }
 
-    private void showVenueIconsLayout() {
+    /*private void showVenueIconsLayout() {
         mVenueIconsLayout.setVisibility(VISIBLE);
     }
 
     private void hideVenueIconsLayout() {
         mVenueIconsLayout.setVisibility(GONE);
-    }
+    }*/
 
     private void showVenueListLayout() {
         mVenueListLayout.setVisibility(VISIBLE);
@@ -653,14 +650,14 @@ public class NavigationFragment extends BaseFragment {
         mVenueListLayout.setVisibility(GONE);
     }
 
-    private void populateVenueIconsLayout() {
+    /*private void populateVenueIconsLayout() {
         if (mVenueIconsLayout.getVisibility() == VISIBLE)
             mVenuesIconsListAdapter.updateList(getFilteredVenuesIconsList());
-    }
+    }*/
 
-    private List<VenueIconObj> getFilteredVenuesIconsList() {
+    /*private List<VenueIconObj> getFilteredVenuesIconsList() {
         return mFilteredVenueIconsList;
-    }
+    }*/
 
     private void hideSearchCLoseBtn() {
         mSearchBtnClose.setVisibility(GONE);
@@ -670,76 +667,24 @@ public class NavigationFragment extends BaseFragment {
         mSearchBtnClose.setVisibility(VISIBLE);
     }
 
-    private void pointCameraToVenue(float[] venueCoords) {
-        loadSublocation();
-        zoomToVenue(venueCoords);
-    }
-
-    private void zoomToVenue(float[] venueCoords) {
-        if (mAdjustMode) toggleAdjustMode();
-        mLocationView.post(() -> adjustDevice(new Point(venueCoords[0], venueCoords[1])));
-        
-    }
-
-    private void zoomToVenue(Venue venue) {
-        if (mAdjustMode) toggleAdjustMode();
-        mLocationView.post(() -> adjustDevice(venue.getPoint()));
-    }
 
     private class StateReceiver extends BroadcastReceiver {
         //private ArrayList<VenueIconObj> filteredVenues = null;
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null && VENUE_SELECTED.equals(intent.getAction())) {
-                int sublocationId = intent.getIntExtra(KEY_VENUE_SUBLOCATION, 0);
-                float[] point     = intent.getFloatArrayExtra(KEY_VENUE_POINT);
-                //int sublocationIndex = mLocation.getSublocations().indexOf(mLocation.getSublocationById(sublocationId));
+                String venueName = intent.getStringExtra(KEY_VENUE_NAME);
                 onHandleCancelSearch();
-                String x = String.valueOf(point[0]);
-                String y = String.valueOf(point[1]);
-                String coord = x+" , "+y;
-                String ancho = String.valueOf(mSublocation.getWidth());
-                Toast.makeText(getContext(),ancho,Toast.LENGTH_SHORT).show();
-                //pointCameraToVenue(point);
-            }
-            /*switch (intent.getAction()) {
-                case LOCATION_CHANGED:
-                    mLocationChanged = true;
-                    hideMessageDelay();
-                    if (mAdjustMode) toggleAdjustMode();
-                    cancelRouteAndHideSheet();
-                    removeChipsFromGroup();
-                    clearSearchQuery();
-                    onCloseSearch();
-                    hideTransparentLayout();
-                    break;
-                case VENUE_SELECTED:
-                    int sublocationId = intent.getIntExtra(KEY_VENUE_SUBLOCATION, 0);
-                    float[] point     = intent.getFloatArrayExtra(KEY_VENUE_POINT);
-                    int sublocationIndex = mLocation.getSublocations().indexOf(mLocation.getSublocationById(sublocationId));
-                    onCloseSearch();
-                    hideTransparentLayout();
-                    pointCameraToVenue(sublocationIndex, point);
-                    break;
-                case VENUE_FILTER_ON:
-                case VENUE_FILTER_OFF:
-                    filteredVenues = intent.getParcelableArrayListExtra(KEY_VENUE_CATEGORY);
-                    if (filteredVenues != null) {
-                        if (intent.getAction().equals(VENUE_FILTER_ON)) {
-                            updateSearchViewWithChips(filteredVenues);
-                            applyVenueFilter(filteredVenues);
-                        }
-                        else {
-                            removeChipsFromGroup();
-                            resetVenueFilter();
-                        }
+                for (int i = 0; i < mSublocation.getVenues().size(); i++) {
+                    Venue v = mSublocation.getVenues().get(i);
+                    if (v.getName().equals(venueName)) {
+                        mPinVenue = v;
+                        showVenueBottomSheet();
+                        break;
                     }
-                    onCloseSearch();
-                    hideTransparentLayout();
-                    break;
-            }*/
+                }
+            }
         }
-
     }
 
 }

@@ -2,6 +2,7 @@ package com.proyecto.mallnav.utils;
 
 import com.proyecto.mallnav.BuildConfig;
 
+
 public class Constants {
 
     public static final String TAG = "MallnavDemo.LOG";
@@ -48,6 +49,8 @@ public class Constants {
     public static final String KEY_VENUE_SUBLOCATION = "venue_sublocation";
     public static final String KEY_VENUE_POINT       = "venue_point";
     public static final String KEY_VENUE_CATEGORY    = "venue_category";
+    public static final String KEY_VENUE_NAME    = "name";
+
 
     // debug mode
     public static final int LIST_SIZE_DEFAULT = 6;

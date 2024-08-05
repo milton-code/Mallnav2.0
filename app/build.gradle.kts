@@ -3,6 +3,7 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+
 android {
     namespace = "com.proyecto.mallnav"
     compileSdk = 34
@@ -22,6 +23,10 @@ android {
 
         buildConfigField ("String", "DEFAULT_SERVER_URL", "\"https://ips.navigine.com\"")
         buildConfigField ("String", "DEFAULT_USER_HASH", "\"2131-2229-C767-3B9D\"")
+
+        ndk {
+            abiFilters += setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+        }
     }
 
     buildTypes {
@@ -37,6 +42,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    sourceSets {
+        getByName("main") {
+            jniLibs.srcDir("libs")  // Esto no debería ser necesario, pero no debería causar problemas.
+        }
+    }
+
 }
 
 dependencies {

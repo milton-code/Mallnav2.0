@@ -146,4 +146,6 @@ For push notifications, the application has to work in background mode</string>
     <string name="sheet_route_finish_title">You have reached your destination</string>
     <string name="sheet_route_finish_button">Finish</string>
     <string name="navigation">Navegacion</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
