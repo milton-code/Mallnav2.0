@@ -5,7 +5,7 @@ import com.proyecto.mallnav.BuildConfig;
 
 public class Constants {
 
-    public static final String TAG = "MallnavDemo.LOG";
+    public static final String TAG = "NavigineDemo.LOG";
 
     // deep link query params
     public static final String DL_QUERY_SERVER         = "server";

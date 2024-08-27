@@ -21,13 +21,13 @@ public class BottomSheetVenue extends BottomSheetDialogFragment {
 
     private TextView         mSheetTitle        = null;
     private TextView         mVenueDescription  = null;
-    //private ImageView        mVenueImage        = null;
+    private ImageView        mVenueImage        = null;
     private MaterialButton   mCloseButton       = null;
     private MaterialButton   mRouteButton       = null;
 
     private String mTitle       = null;
     private String mDescription = null;
-    //private String mImageRef    = null;
+    private String mImageRef    = null;
 
     private View.OnClickListener onClickListener = null;
     private static int VISIBILITY = View.VISIBLE;
@@ -49,7 +49,7 @@ public class BottomSheetVenue extends BottomSheetDialogFragment {
         mVenueDescription = view.findViewById(R.id.venue_dialog__description);
         //mVenueImage       = view.findViewById(R.id.venue_dialog__image);
         mCloseButton      = view.findViewById(R.id.venue_dialog__search_btn_close);
-        mRouteButton      = view.findViewById(R.id.venue_dialog__route_button);
+        //mRouteButton      = view.findViewById(R.id.venue_dialog__route_button);
     }
 
     private void setViewsParams() {
@@ -66,7 +66,7 @@ public class BottomSheetVenue extends BottomSheetDialogFragment {
             mVenueImage.setImageResource(R.drawable.elm_loading_venue_photo);
         }*/
 
-        mRouteButton.setVisibility(VISIBILITY);
+        //mRouteButton.setVisibility(VISIBILITY);
         //mRouteButton.setOnClickListener(onClickListener);
     }
 

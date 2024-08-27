@@ -25,6 +25,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.proyecto.mallnav.R;
 import com.proyecto.mallnav.ui.fragments.RegistroFragment;
 import com.proyecto.mallnav.utils.NavigineSdkManager;
@@ -35,8 +38,11 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
     private int version = Build.VERSION.SDK_INT;
+    static DocumentReference docRef;
+    private FirebaseFirestore mfirestore;
     EditText mCorreo, mPassword;
     Button mLogin;
+    String correoAdmin;
     private FirebaseAuth mAuth;
     boolean inicio;
 
@@ -50,7 +56,14 @@ public class LoginActivity extends AppCompatActivity {
         mCorreo = findViewById(R.id.editTextEmail);
         mPassword = findViewById(R.id.editTextPassword);
         mLogin = findViewById(R.id.buttonLogin);
+
         mAuth = FirebaseAuth.getInstance();
+        mfirestore = FirebaseFirestore.getInstance();
+        String userId = "PMRxKOxT9ZPdbcg2VRyiV9RsIGq1";
+        docRef = mfirestore.collection("admin").document(userId);
+
+
+
         //Inicializar el launcher para la solicitud de permisos
         requestPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
@@ -69,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         );
 
         initPermissionLauncher();
+        initDocRef();
 
         //Definir listener del boton de inicio de sesión
         mLogin.setOnClickListener(new View.OnClickListener() {
@@ -79,21 +93,17 @@ public class LoginActivity extends AppCompatActivity {
                 if(correo.isEmpty()||password.isEmpty()){
                     Toast.makeText(LoginActivity.this,"Ingrese sus credenciales",Toast.LENGTH_SHORT).show();
                 }else {
-                    iniciarSesion(correo, password);
+                    if(correo.equals(correoAdmin)){
+                        Toast.makeText(LoginActivity.this,"Credencial incorrecta",Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        iniciarSesion(correo, password);
+                    }
                 }
             }
         });
     }
 
-    /*@Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if(user != null){
-            mAuth.signOut();
-            startActivity(new Intent(this, LoginActivity.class));
-        }
-    }*/
 
     public void iniciarSesion(String correo, String password){
         mAuth.signInWithEmailAndPassword(correo, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -110,6 +120,17 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this,"Credenciales incorrectas",Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void initDocRef(){
+        docRef.get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        correoAdmin = document.getString("e_mail");
+                    }
+                });
     }
 
     private void initPermissionLauncher(){

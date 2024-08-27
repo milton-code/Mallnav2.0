@@ -2,13 +2,15 @@ package com.proyecto.mallnav.ui.fragments;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-
+import static com.proyecto.mallnav.service.NavigationService.ACTION_POSITION_ERROR;
+import static com.proyecto.mallnav.service.NavigationService.ACTION_POSITION_UPDATED;
 import static com.proyecto.mallnav.utils.Constants.KEY_VENUE_CATEGORY;
 import static com.proyecto.mallnav.utils.Constants.KEY_VENUE_NAME;
 import static com.proyecto.mallnav.utils.Constants.KEY_VENUE_POINT;
 import static com.proyecto.mallnav.utils.Constants.KEY_VENUE_SUBLOCATION;
 import static com.proyecto.mallnav.utils.Constants.VENUE_FILTER_OFF;
 import static com.proyecto.mallnav.utils.Constants.VENUE_FILTER_ON;
+import static com.proyecto.mallnav.utils.Constants.TAG;
 import static com.proyecto.mallnav.utils.Constants.VENUE_SELECTED;
 
 import android.animation.LayoutTransition;
@@ -22,11 +24,13 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -41,6 +45,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.divider.MaterialDividerItemDecoration;
 import com.google.android.material.textview.MaterialTextView;
+import com.navigine.idl.java.AnimationType;
 import com.navigine.idl.java.CameraListener;
 import com.navigine.idl.java.CameraUpdateReason;
 import com.navigine.idl.java.Category;
@@ -53,15 +58,18 @@ import com.navigine.idl.java.MapObjectPickResult;
 import com.navigine.idl.java.PickListener;
 import com.navigine.idl.java.Point;
 import com.navigine.idl.java.PolylineMapObject;
+import com.navigine.idl.java.RouteListener;
 import com.navigine.idl.java.Sublocation;
 import com.navigine.idl.java.Venue;
 import com.navigine.view.LocationView;
+import com.proyecto.mallnav.service.NavigationService;
 
 import com.proyecto.mallnav.R;
 import com.proyecto.mallnav.adapters.venues.VenueListAdapter;
 import com.proyecto.mallnav.adapters.venues.VenuesIconsListAdapter;
 import com.proyecto.mallnav.models.VenueIconObj;
 import com.proyecto.mallnav.ui.activities.LoginActivity;
+import com.proyecto.mallnav.ui.custom.lists.BottomSheetListView;
 import com.proyecto.mallnav.ui.dialogs.sheets.BottomSheetVenue;
 import com.proyecto.mallnav.utils.ColorUtils;
 import com.proyecto.mallnav.utils.DimensionUtils;
@@ -78,34 +86,43 @@ import java.util.Map;
 public class NavigationFragment extends BaseFragment {
     private final int mLocationId = 1563;
     private final int mSublocationId = 2091;
-
     private int mVenueId = -1;
     private float mZoomCameraDefault = 0f;
-
     private NavigationViewModel viewModel = null;
     private Window window = null;
     private MaterialButton mSearchBtnClose = null;
     private SearchView mSearchField = null;
     private LocationView mLocationView = null;
     private BottomSheetBehavior mMakeRouteBehavior = null;
+    private BottomSheetBehavior mCancelRouteBehaviour = null;
+    private BottomSheetListView mCancelRouteListView = null;
     private ConstraintLayout mNavigationLayout = null;
+    private ConstraintLayout mMakeRouteSheet = null;
     private LinearLayout mSearchLayout = null;
     private FrameLayout mTransparentBackground = null;
     private FrameLayout mVenueListLayout = null;
     private FrameLayout mVenueIconsLayout = null;
     private FrameLayout mAdjustModeButton = null;
+    private MaterialTextView mFromCurrentText = null;
+    private MaterialTextView mToText = null;
+    private MaterialTextView mCancelRouteDistance = null;
+    private MaterialTextView mCancelRouteTime = null;
+    private MaterialTextView mWarningMessage = null;
+    private MaterialTextView mDelayMessage = null;
+    private ImageView mFromImageView = null;
+    private MaterialButton mStartRouteButton = null;
+    private MaterialButton mRouteSheetCancelButton    = null;
     private IconMapObject mPositionIcon = null;
     private PolylineMapObject mPolylineMapObject = null;
-    private IconMapObject     mPinIconTarget       = null;
-    private IconMapObject     mPinIconFrom         = null;
+    private IconMapObject mPinIconTarget = null;
+    private IconMapObject mPinIconFrom = null;
     private MaterialDividerItemDecoration mItemDivider = null;
-
-    private LocationPoint mPinPoint    = null;
+    private LocationPoint mPinPoint = null;
     private LocationPoint mTargetPoint = null;
-    private LocationPoint mFromPoint   = null;
+    private LocationPoint mFromPoint = null;
 
-    private Venue mToVenue     = null;
-    private Venue mFromVenue   = null;
+    private Venue mToVenue  = null;
+    private Venue mFromVenue = null;
     private Venue mTargetVenue = null;
     private Venue mPinVenue = null;
 
@@ -117,7 +134,8 @@ public class NavigationFragment extends BaseFragment {
     //private PositionReceiver mPositionReceiver = null;
 
     private IntentFilter mStateReceiverFilter = null;
-    //private IntentFilter mPositionReceiverFilter = null;
+    private IntentFilter mPositionReceiverFilter = null;
+    private RouteListener mRouteListener             = null;
 
 
     private VenueListAdapter mVenueListAdapter = null;
@@ -125,14 +143,17 @@ public class NavigationFragment extends BaseFragment {
 
     private RecyclerView mVenueListView = null;
     private RecyclerView mVenueIconsListView = null;
-
     private BottomSheetVenue mVenueBottomSheet = null;
-    private MaterialTextView mWarningMessage = null;
     private Location mLocation = null;
     private LocationPoint mPositionLocationPoint = null;
     private Sublocation mSublocation = null;
     private boolean mLocationLoaded = false;
     private boolean mAdjustMode = false;
+    private boolean mRouting = false;
+    private boolean mSelectMapPoint = false;
+    private boolean mSetupPosition = true;
+
+    private boolean mOrientationPointState  = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -258,17 +279,23 @@ public class NavigationFragment extends BaseFragment {
         window = requireActivity().getWindow();
         mLocationView = view.findViewById(R.id.location_view);
         mNavigationLayout = view.findViewById(R.id.navigation__navigation_layout);
-        mVenueIconsLayout = view.findViewById(R.id.navigation__venue_icons);
+        //mVenueIconsLayout = view.findViewById(R.id.navigation__venue_icons);
         mSearchLayout = view.findViewById(R.id.navigation_search);
         mTransparentBackground = view.findViewById(R.id.navigation__search_transparent_bg);
         mVenueListLayout = view.findViewById(R.id.navigation__venue_listview);
+        //mMakeRouteSheet = view.findViewById(R.id.navigation__make_route_sheet);
+        //mMakeRouteBehavior = BottomSheetBehavior.from(mMakeRouteSheet);
+        //mFromImageView = mMakeRouteSheet.findViewById(R.id.make_route__from_current_image);
+        //mStartRouteButton = mMakeRouteSheet.findViewById(R.id.start_route__button);
+        //mFromCurrentText = mMakeRouteSheet.findViewById(R.id.make_route__from_current_title);
+        //mToText = mMakeRouteSheet.findViewById(R.id.make_route__to_text);
         mSearchBtnClose = view.findViewById(R.id.navigation__search_btn_close);
         mAdjustModeButton = view.findViewById(R.id.navigation__adjust_mode_button);
         mSearchField = view.findViewById(R.id.navigation__search_field);
         mWarningMessage = view.findViewById(R.id.navigation__warning);
         mVenueListView = view.findViewById(R.id.recycler_list_venues);
         mItemDivider = new MaterialDividerItemDecoration(requireActivity(), MaterialDividerItemDecoration.VERTICAL);
-        mVenueIconsListView = view.findViewById(R.id.recycler_list_venue_icons);
+        //mVenueIconsListView = view.findViewById(R.id.recycler_list_venue_icons);
         mVenueBottomSheet = new BottomSheetVenue();
     }
 
@@ -305,6 +332,19 @@ public class NavigationFragment extends BaseFragment {
         });
 
         mSearchBtnClose.setOnClickListener(v -> onHandleCancelSearch());
+        //mMakeRouteSheet.setOnTouchListener((view, motionEvent) -> true);
+
+        /*mStartRouteButton.setOnClickListener(v ->
+        {
+            if (mPinPoint == null && mToVenue == null) {
+                Toast.makeText(requireActivity(), R.string.navigation_destination_select, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (mFromVenue == null && mFromPoint == null && mSelectMapPoint) return;
+
+            onMakeRoute();
+        });*/
 
         //mAdjustModeButton.setOnClickListener(v -> toggleAdjustMode());
 
@@ -367,13 +407,13 @@ public class NavigationFragment extends BaseFragment {
         if (categoryText.length() > 30)
             categoryText = categoryText.substring(0, 28) + "…";*/
 
-//        String bm = new String(Base64.decode(mPinVenue.getImage(null), Base64.DEFAULT), StandardCharsets.UTF_8);
+        //String bm = new String(Base64.decode(mPinVenue.getImage(null), Base64.DEFAULT), StandardCharsets.UTF_8);
         //String bm = mPinVenue.getImageUrl();
 
         mVenueBottomSheet.setSheetTitle(titleText);
         mVenueBottomSheet.setDescription(mPinVenue.getDescript());
         //mVenueBottomSheet.setImageRef(bm);
-        mVenueBottomSheet.setRouteButtonVisibility(mFromPoint == null ? GONE : VISIBLE);
+        //mVenueBottomSheet.setRouteButtonVisibility(mFromPoint == null ? GONE : VISIBLE);
         /*mVenueBottomSheet.setRouteButtonClick(v -> {
             mPinPoint = null;
             mToVenue = mPinVenue;
@@ -389,7 +429,86 @@ public class NavigationFragment extends BaseFragment {
         //hideAndShowBottomSheets(mMakeRouteBehavior, null, BottomSheetBehavior.STATE_COLLAPSED);
     }
 
-    /*public void toggleAdjustMode() {
+    /*public void onMakeRoute() {
+
+        if (mSelectMapPoint) {
+            mTargetPoint = mPinPoint;
+            mTargetVenue = mToVenue;
+            mPinPoint = null;
+            mPinVenue = null;
+            mToVenue = null;
+            return;
+        }
+
+        if (mPinPoint != null) {
+            mTargetPoint = mPinPoint;
+            mTargetVenue = null;
+            mPinPoint = null;
+            mPinVenue = null;
+            mToVenue = null;
+
+            Log.d(TAG, "Set target point");
+
+            NavigineSdkManager.RouteManager.setTarget(mTargetPoint);
+
+        } else if (mToVenue != null) {
+            mTargetVenue = mToVenue;
+            mTargetPoint = null;
+            mPinVenue = null;
+            mToVenue = null;
+            mPinPoint = null;
+
+            Log.d(TAG, "Set venue target " + mTargetVenue.getId());
+
+            NavigineSdkManager.RouteManager.setTarget(new LocationPoint(mTargetVenue.getPoint(), mLocation.getId(), mSublocation.getId()));
+        }
+        NavigineSdkManager.RouteManager.addRouteListener(mRouteListener);
+        if (mVenueBottomSheet.isAdded()) mVenueBottomSheet.dismiss();
+        hideAndShowBottomSheets(null, mMakeRouteBehavior, BottomSheetBehavior.STATE_HIDDEN);
+
+        setRoutingFlag();
+    }
+
+    private void setRoutingFlag() {
+        mRouting = true;
+    }
+
+    private void hideAndShowBottomSheets(@Nullable BottomSheetBehavior hideFirst, @Nullable BottomSheetBehavior show, int showState) {
+        if (hideFirst != null) hideFirst.setState(BottomSheetBehavior.STATE_HIDDEN);
+        if (show != null) show.setState(showState);
+        if (show != null && show == mMakeRouteBehavior) {
+            setActiveMakeRouteButton(false, false);
+            if (mAdjustMode) {
+                toggleAdjustMode();
+            }
+        }
+    }
+
+    private void setActiveMakeRouteButton(boolean isSelectMapPoint, boolean isGiveChoose) {
+        mSelectMapPoint = isSelectMapPoint;
+        if (isGiveChoose) {
+            mFromPoint = null;
+            mFromVenue = null;
+        }
+        if (mSelectMapPoint) {
+            mFromCurrentText.setText("From: Select Point on Map");
+            mFromCurrentText.setTextColor(getResources().getColor(R.color.colorError));
+            mFromImageView.setImageResource(R.drawable.ic_to_point);
+            updatePinIconState(mPinIconFrom, true);
+        } else {
+            mFromCurrentText.setText("From: Current Location");
+            mFromCurrentText.setTextColor(getResources().getColor(R.color.colorPrimary));
+            mFromImageView.setImageResource(R.drawable.ic_current_point);
+            updatePinIconState(mPinIconFrom, false);
+        }
+
+    }
+
+    private void updatePinIconState(IconMapObject pinIcon, boolean visible) {
+        if (pinIcon != null) pinIcon.setVisible(visible);
+    }
+
+    public void toggleAdjustMode() {
         if (mPositionLocationPoint == null)
             //showWarningTemp(getString(R.string.err_navigation_position_define), 1500);
             Toast.makeText(getContext(),"Elver",Toast.LENGTH_SHORT).show();
@@ -547,6 +666,11 @@ public class NavigationFragment extends BaseFragment {
         updatePinIconsState(false, mPinIconFrom, mPinIconTarget);
     }
 
+    private void adjustDevice(Point point) {
+        Camera camera = new Camera(point, mZoomCameraDefault * 2, 0);
+        mLocationView.getLocationWindow().flyTo(camera, 1000, null);
+    }
+
 
     private boolean hasTarget() {
         return mTargetPoint != null || mTargetVenue != null;
@@ -606,7 +730,7 @@ public class NavigationFragment extends BaseFragment {
 
     private void hideVenueLayouts() {
         mVenueListLayout.setVisibility(GONE);
-        mVenueIconsLayout.setVisibility(GONE);
+        //mVenueIconsLayout.setVisibility(GONE);
     }
 
     private void onSearchBoxFocusChange(View v, boolean hasFocus) {
@@ -686,5 +810,73 @@ public class NavigationFragment extends BaseFragment {
             }
         }
     }
+
+    /*private class PositionReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action == null) return;
+            switch (action) {
+                case ACTION_POSITION_UPDATED:
+
+                    float x = intent.getFloatExtra(NavigationService.KEY_POINT_X, -1f);
+                    float y = intent.getFloatExtra(NavigationService.KEY_POINT_Y, -1f);
+                    int locationId = intent.getIntExtra(NavigationService.KEY_LOCATION_ID, -1);
+                    int sublocationId = intent.getIntExtra(NavigationService.KEY_SUBLOCATION_ID, -1);
+                    double pointLocationHeading = intent.getDoubleExtra(NavigationService.KEY_LOCATION_HEADING, -1.0);
+
+                    LocationPoint lp = new LocationPoint(new Point(x, y), locationId, sublocationId);
+
+                    if (x == -1f || y == -1f || locationId == -1 || sublocationId == -1) return;
+
+                    mPositionLocationPoint = lp;
+
+                    if (pointLocationHeading != -1) {
+                        if (!mOrientationPointState) {
+                            mOrientationPointState = true;
+                            mPositionIcon.setSize(48, 52);
+                            mPositionIcon.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_current_point_direction_png));
+                            //mPositionIcon.setAngle(pointLocationHeading);
+                        }
+                        //mPositionIcon.setAngleAnimated(pointLocationHeading, 1.0f, AnimationType.CUBIC);
+                    } else {
+                        if (mOrientationPointState) {
+                            mOrientationPointState = false;
+                            mPositionIcon.setSize(30, 30);
+                            mPositionIcon.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_current_point_png));
+                        }
+                    }
+
+                    if (mAdjustMode) {
+                        int id = lp.getSublocationId();
+                        if (mSublocation.getId() != id) {
+                            mSublocation = mLocation.getSublocationById(id);
+                            loadSublocation(/*mLocation.getSublocations().indexOf(mSublocation)*//*);
+                        }
+                        adjustDevice(lp.getPoint());
+                    }
+                    mFromPoint = lp;
+                    mPositionIcon.setVisible(true);
+                    if (mSetupPosition) {
+                        mSetupPosition = false;
+                        mPositionIcon.setPosition(mFromPoint);
+                    } else {
+                        mPositionIcon.setPositionAnimated(mFromPoint, 1.0f, AnimationType.CUBIC);
+                    }
+                    break;
+                case ACTION_POSITION_ERROR:
+                    mPositionLocationPoint = null;
+                    mAdjustModeButton.setSelected(false);
+                    mPositionIcon.setVisible(false);
+                    String errMsg = intent.getStringExtra(ACTION_POSITION_ERROR);
+                    if (errMsg != null) {
+                        Log.e(TAG, getString(R.string.err_navigation_position_update) + ":" + errMsg);
+                    }
+                    break;
+            }
+        }
+    }*/
+
 
 }

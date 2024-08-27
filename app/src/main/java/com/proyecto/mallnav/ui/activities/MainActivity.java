@@ -7,21 +7,23 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.work.WorkManager;
+import androidx.work.Constraints;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.OutOfQuotaPolicy;
 
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.proyecto.mallnav.R;
 //import com.proyecto.mallnav.models.BeaconMock;
-//import com.proyecto.mallnav.service.*;
+import com.proyecto.mallnav.service.*;
+
 
 
 public class MainActivity extends AppCompatActivity {
-
-
     private BottomNavigationView mBottomNavigation = null;
     OnBackPressedDispatcher onBackPressedDispatcher = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         backPressed();
         initNavigationView();
         //startNavigationService();
+
     }
 
     @Override
@@ -62,6 +65,15 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = navHostFragment.getNavController();
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(mBottomNavigation, navController);
+    }
+
+    private void startNavigationService() {
+        Constraints constraints = new Constraints.Builder().build();
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(NavigationWorker.class)
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance(getApplicationContext()).enqueue(request);
     }
 
 }
